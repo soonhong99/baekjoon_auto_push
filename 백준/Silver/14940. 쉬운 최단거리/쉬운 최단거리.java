@@ -5,65 +5,63 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
-import java.util.LinkedList;
 
 public class Main {
     static int[][] land;
-    static int[][] depth;
+    static int[][] distance;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int[] lineNum = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        int startX = 0;
-        int startY = 0;
-        land = new int[lineNum[0]][lineNum[1]];
-        depth = new int[land.length][land[0].length];
-        for (int i = 0; i < lineNum[0]; i++) {
-            int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            for (int j = 0; j < lineNum[1]; j++) {
-                if (input[j] == 2) {
-                    startX = i;
-                    startY = j;
-                    continue;
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int maxColumn = input[0];
+        int maxRow = input[1];
+        int startColumn = 0;
+        int startRow = 0;
+
+        land = new int[maxColumn][maxRow];
+        distance = new int[maxColumn][maxRow];
+        for (int i = 0; i < maxColumn; i++) {
+            int[] currentRow = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            for (int j = 0; j < maxRow; j++) {
+                land[i][j] = currentRow[j];
+                distance[i][j] = -1;
+                if (currentRow[j] == 2) {
+                    startColumn = i;
+                    startRow = j;
+                    distance[i][j] = 0;
                 }
-                land[i][j] = input[j];
-                if (input[j] == 1)
-                    depth[i][j] = -1;
+                if (currentRow[j] == 0) {
+                    distance[i][j] = 0;
+                }
             }
         }
-
-        calDistance(startX, startY);
-
-        for (int i = 0; i < lineNum[0]; i++) {
-            StringBuilder currentRow = new StringBuilder();
-            for (int j = 0; j < lineNum[1]; j++) {
-                currentRow.append(depth[i][j] + " ");
+        /*
+        일단 도달하지 못한 곳을 거리 -1 이라고 설정. 왜? -> 갈 수 있는 땅인지, 아닌지 알 수 없으므로.
+         */
+        bfs(startColumn, startRow);
+        for (int i = 0; i < land.length; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < land[0].length; j++) {
+                sb.append(distance[i][j] + " ");
             }
-            System.out.println(currentRow);
+            System.out.println(sb);
         }
     }
 
-    private static void calDistance(int startX, int startY) {
-        int[] dx = {0, 0, -1, 1};
+    private static void bfs(int startColumn, int startRow) {
         int[] dy = {-1, 1, 0, 0};
+        int[] dx = {0, 0, -1, 1};
+        Deque<int[]> ternal = new ArrayDeque<>();
+        ternal.add(new int[] {startColumn, startRow});
 
-        Deque<int[]> deque = new ArrayDeque<>();
-        deque.add(new int[] {startX, startY});
-        depth[startX][startY] = 0;
-
-        while (deque.size() != 0) {
-            int[] currentNode = deque.poll();
-            int distance = depth[currentNode[0]][currentNode[1]];
+        while (ternal.size() != 0) {
+            int[] currentNode = ternal.poll();
             for (int i = 0; i < 4; i++) {
-                int nx = currentNode[0] + dx[i];
-                int ny = currentNode[1] + dy[i];
-                if (nx >= 0 && nx < land.length && ny >= 0 && ny < land[0].length) {
-                    if (land[nx][ny] == 1 && depth[nx][ny] == -1) {
-                        deque.add(new int[] {nx, ny});
-                        land[nx][ny] = 0;
-                        depth[nx][ny] = distance + 1;
-                    }
-//                    else if (land[nx][ny] == 0)
-//                        depth[nx][ny] = 0;
+                int moveColumn = currentNode[0] + dy[i];
+                int moveRow = currentNode[1] + dx[i];
+                if (moveColumn >= 0 && moveColumn < land.length && moveRow >= 0 && moveRow < land[0].length
+                        && land[moveColumn][moveRow] == 1 && distance[moveColumn][moveRow] == -1) {
+                    distance[moveColumn][moveRow] = distance[currentNode[0]][currentNode[1]] + 1;
+                    ternal.add(new int[] {moveColumn, moveRow});
                 }
             }
         }
