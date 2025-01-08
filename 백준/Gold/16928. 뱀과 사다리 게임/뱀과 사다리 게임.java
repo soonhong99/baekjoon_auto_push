@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,13 +51,13 @@ public class Main {
                 if (depth[currentLocation + i] == 0) {
                     depth[currentLocation + i] = momDepth + 1;
                     if (stairMap.containsKey(currentLocation + i)) {
-                        if (depth[stairMap.get(currentLocation + i)] > momDepth + 1 || depth[stairMap.get(currentLocation + i)] == 0)
+                        if (depth[stairMap.get(currentLocation + i)] == 0)
                             depth[stairMap.get(currentLocation + i)] = momDepth + 1;
                         queue.add(stairMap.get(currentLocation + i));
                         continue;
                     }
                     else if (snakeMap.containsKey(currentLocation + i)) {
-                        if (depth[snakeMap.get(currentLocation + i)] > momDepth + 1 || depth[snakeMap.get(currentLocation + i)] == 0)
+                        if (depth[snakeMap.get(currentLocation + i)] == 0)
                             depth[snakeMap.get(currentLocation + i)] = momDepth + 1;
                         queue.add(snakeMap.get(currentLocation + i));
                         continue;
