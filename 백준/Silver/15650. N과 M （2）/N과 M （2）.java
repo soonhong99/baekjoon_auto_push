@@ -15,34 +15,32 @@ import java.util.stream.Collectors;
 
 
 public class Main {
+    static int limitNum;
+    static int length;
     static int[] arr;
-    static int N, M;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        arr = new int[M]; // depth를 구하는거니까
+        limitNum = Integer.parseInt(st.nextToken());
+        length = Integer.parseInt(st.nextToken());
+        arr = new int[length];
 
         dfs(1, 0);
     }
 
-    private static void dfs(int at, int depth) {
-        /*
-        1,0 들어갔어 -> arr 첫 인덱스에 1이 들어가 -> dfs에 2,1이 들어가 -> 두번째 인덱스에 2가 들어가
-                  -> i가 1 증가해서 첫 인덱스에 2가 들어가 -> dfs에 3, 1이 들어가 -> 두번째 인덱스에 3이 들어가
-        이게 어케 DFS인걸 알지?
-         */
-        if (depth == M) {
-            for (int val : arr) {
-                System.out.print(val + " ");
+    // depth를 알고 있어야 한다, 해당 depth의 인자값을 알고있어야 한다.
+    private static void dfs(int currentNum, int currentDepth) {
+        if (currentDepth == length) {
+            for (int i : arr) {
+                System.out.print(i + " ");
             }
             System.out.println();
             return;
         }
-        for (int i = at; i <= N; i++) {
-            arr[depth] = i;
-            dfs(i + 1, depth + 1);
+
+        for (int i = currentNum; i <= limitNum; i++) {
+            arr[currentDepth] = i;
+            dfs(i + 1, currentDepth + 1);
         }
     }
 }
