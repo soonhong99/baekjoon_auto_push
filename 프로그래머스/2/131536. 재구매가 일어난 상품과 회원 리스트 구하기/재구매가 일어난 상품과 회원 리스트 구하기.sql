@@ -1,14 +1,14 @@
 -- 코드를 입력하세요
-SELECT
+select
     USER_ID,
     PRODUCT_ID
-    # COUNT(*)
-FROM
+from
     ONLINE_SALE
-GROUP BY
+group by
     USER_ID,
     PRODUCT_ID
-HAVING COUNT(*) > 1
-ORDER BY 
-    USER_ID ASC, 
+having
+    COUNT(*) > 1
+order by
+    USER_ID ASC,
     PRODUCT_ID DESC
